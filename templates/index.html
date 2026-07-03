@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitch View - Оператор дрона</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ GLITCH VIEW</h1>
+            <div class="status-bar">
+                <span id="status">🟢 ONLINE</span>
+                <span id="glitchLevel">ГЛИТЧ: 30%</span>
+                <span id="signalStrength">СИГНАЛ: ████████</span>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="viewport">
+                <canvas id="gameCanvas"></canvas>
+                <div class="scanlines"></div>
+                <div class="vignette"></div>
+                <div class="glitch-overlay" id="glitchOverlay"></div>
+            </div>
+            
+            <div class="hud">
+                <div class="hud-item">
+                    <span class="hud-label">📡 ПОЗИЦИЯ</span>
+                    <span id="playerPos">0, 0</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">⚠️ ВРАГИ</span>
+                    <span id="enemyCount">0</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">🎯 ЦЕЛЬ</span>
+                    <span id="exitStatus">▼</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">⏱ ОБНОВЛЕНИЕ</span>
+                    <span id="updateTimer">2.0s</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-move" data-dir="up">↑</button>
+            <div class="move-row">
+                <button class="btn btn-move" data-dir="left">←</button>
+                <button class="btn btn-move" data-dir="down">↓</button>
+                <button class="btn btn-move" data-dir="right">→</button>
+            </div>
+            <button class="btn btn-action" id="scanBtn">🔍 СКАНИРОВАТЬ</button>
+            <button class="btn btn-action" id="restartBtn">⟲ ПЕРЕЗАПУСК</button>
+        </div>
+        
+        <div class="log" id="log">
+            <div class="log-entry system">[СИСТЕМА] Инициализация дрона...</div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>
