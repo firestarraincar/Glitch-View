@@ -311,12 +311,17 @@ def index():
     """Главная страница"""
     return render_template('index.html')
 
-@app.route('/api/new-game', methods=['POST'])
+# ✅ ИСПРАВЛЕНО: разрешены GET и POST
+@app.route('/api/new-game', methods=['GET', 'POST'])
 def new_game():
-    """Создает новую игру"""
-    session_id = request.json.get('session_id')
-    if not session_id:
-        session_id = str(random.randint(100000, 999999))
+    """Создает новую игру (поддерживает GET и POST)"""
+    session_id = str(random.randint(100000, 999999))
+    
+    # Получаем session_id из разных источников
+    if request.method == 'POST':
+        session_id = request.json.get('session_id', session_id)
+    else:
+        session_id = request.args.get('session_id', session_id)
     
     games[session_id] = GlitchWorld(session_id)
     
@@ -325,22 +330,32 @@ def new_game():
         'game_state': games[session_id].get_state()
     })
 
-@app.route('/api/game-state', methods=['GET'])
+# ✅ ИСПРАВЛЕНО: разрешены GET и POST
+@app.route('/api/game-state', methods=['GET', 'POST'])
 def get_game_state():
     """Получает текущее состояние игры"""
-    session_id = request.args.get('session_id')
+    if request.method == 'POST':
+        session_id = request.json.get('session_id')
+    else:
+        session_id = request.args.get('session_id')
+    
     if not session_id or session_id not in games:
         return jsonify({'error': 'Игра не найдена'}), 404
     
     game = games[session_id]
     return jsonify(game.get_state())
 
-@app.route('/api/move', methods=['POST'])
+# ✅ ИСПРАВЛЕНО: разрешены GET и POST
+@app.route('/api/move', methods=['GET', 'POST'])
 def move_player():
     """Движение игрока"""
-    data = request.json
-    session_id = data.get('session_id')
-    direction = data.get('direction')
+    if request.method == 'POST':
+        data = request.json
+        session_id = data.get('session_id')
+        direction = data.get('direction')
+    else:
+        session_id = request.args.get('session_id')
+        direction = request.args.get('direction')
     
     if not session_id or session_id not in games:
         return jsonify({'error': 'Игра не найдена'}), 404
@@ -362,10 +377,15 @@ def move_player():
             'game_state': game.get_state()
         })
 
-@app.route('/api/update', methods=['POST'])
+# ✅ ИСПРАВЛЕНО: разрешены GET и POST
+@app.route('/api/update', methods=['GET', 'POST'])
 def update_game():
     """Принудительное обновление мира"""
-    session_id = request.json.get('session_id')
+    if request.method == 'POST':
+        session_id = request.json.get('session_id')
+    else:
+        session_id = request.args.get('session_id')
+    
     if not session_id or session_id not in games:
         return jsonify({'error': 'Игра не найдена'}), 404
     
@@ -377,10 +397,15 @@ def update_game():
         'result': result
     })
 
-@app.route('/api/restart', methods=['POST'])
+# ✅ ИСПРАВЛЕНО: разрешены GET и POST
+@app.route('/api/restart', methods=['GET', 'POST'])
 def restart_game():
     """Перезапуск игры"""
-    session_id = request.json.get('session_id')
+    if request.method == 'POST':
+        session_id = request.json.get('session_id')
+    else:
+        session_id = request.args.get('session_id')
+    
     if not session_id or session_id not in games:
         return jsonify({'error': 'Игра не найдена'}), 404
     
